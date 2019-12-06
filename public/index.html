@@ -99,7 +99,7 @@ footer {
 </style>
 </head>
 
-<body>
+<body onload = "Subjects()">
 <div class="headernav">
     <div class="container">
         <div class="row">
@@ -116,23 +116,7 @@ footer {
 <div class="container">
     <div class="row">
     <div class="col-lg-8 col-md-8" id="">
-        <div class="display" id="display"><button type="button" class="btn btn-light btn-lg btn-block" onclick="Subjects()">click to choose a class</button></div><br>
-            <div class="post" id="">
-            <div class="topwrap">
-            <div class="userinfo pull-left">
-                <h3 id="name">User Name</h3>
-                <p id="date"></p>
-            </div>
-            <div class="posttext pull-left">
-            <div class="textbox">
-                <textarea rows="3" cols="50" id="reply" value="" placeholder="type your reply here"></textarea>
-        
-            </div>
-            </div>
-            </div>
-            <div class="botwrap ">
-                <button class="btn btn-info " type="submit">Post Reply</button>
-            </div>
+        <div class="display" id="display"></div><br>
             </div>
         </div>
             <div class="col-lg-4 col=md-4">
@@ -183,6 +167,7 @@ function add(subject, className) {
         success: function(msg) {
         var x =  JSON.parse(msg);
         console.log(msg);
+        Subjects();
         },
         error: function (xhr, ajaxOptions, thrownError) {
             console.log(xhr);
@@ -223,6 +208,7 @@ function Subjects(){
     });
     //to create the list of subs
     function subjectList(g){
+        document.getElementById("display").innerHTML = "";
         var list1 = "<div class='list-group'>";
         for (var y = 0; y < g.length; y++){
             var mid = "";
