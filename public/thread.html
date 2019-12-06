@@ -159,14 +159,11 @@ footer {
 <script>
 var d = Date();
 document.getElementById("date").innerHTML = d;
-
 //the threaaaaaadsss!!!
 function thread(){
     let params = new URLSearchParams(location.search);
     var topicID = params.get('topicID');
-
     var keyValueTopicID = {"topicID": topicID};
-
     document.getElementById("display").innerHTML = '';
     document.getElementById("replyComment").innerHTML = '';
     var URL = "./threads";
@@ -187,17 +184,15 @@ function thread(){
         console.log(xhr);
     }
     });
-
     function popThread(g){
         console.log("I'm here again")
         for (var y = 0; y < g.length; y++){
             var fullname = g[y].creatorName;
             var contents = g[y].text;
             var threadID = g[y].threadID;
-            var pop = "<div class='thread' id=''><div class='topwrap'><div class='userinfo pull-left'><h3 id='username'><a href='#' onclick=\"oneThread('" +fullname+"','"+contents +"','"+threadID+"')\">"+fullname+"</a></h3><p id='information'>"+contents+"</p></div></div><div class='botwrap'></div></div>";
+            var pop = "<div class='thread' id=''><div class='topwrap'><div class='userinfo pull-left'><h3 id='username'><a href='#' onclick=\"oneThread('" +fullname+"','"+contents +"',"+threadID+")\">"+fullname+"</a></h3><p id='information'>"+contents+"</p></div></div><div class='botwrap'></div></div>";
             document.getElementById("display").innerHTML += pop;                                                          
         }
-
     }
 }
 //specific thread
@@ -207,20 +202,14 @@ function oneThread(a, b, c){
     getPost(c);
     replyBox(a, c);
 }
-
 //the commmeentttssss
-function reply(){
+function reply(y){
     var recontent = document.getElementById("reply").value;
-    comment(recontent);
+    comment(recontent, y);
 }
-
-function comment(a) {
-    
-    let params = new URLSearchParams(location.search);
-    var topicID = params.get('topicID');
-
+function comment(a, y) {
     var URL = "./addComment"
-    var info = {"threadID" : topicID, "text": a};
+    var info = {"threadID" : y, "text": a};
     $.ajax({
         type : "GET",
         url : URL,
@@ -229,7 +218,6 @@ function comment(a) {
         data: info,
         success: function(msg) {
         var x =  JSON.parse(msg);
-        postIt([{"text": a}]);
         console.log(msg);
         },
         error: function (xhr, ajaxOptions, thrownError) {
@@ -237,7 +225,6 @@ function comment(a) {
         }
     });
 }
-
 function getPost(x) {
     var URL = "./getComments";
     var info = {"threadID" : x};
@@ -249,6 +236,7 @@ function getPost(x) {
         data: info,
         success: function(msg) {
         var x =  JSON.parse(msg);
+        document.getElementById("replyComment").innerHTML = "";
         postIt(x);
         console.log(msg);
         },
@@ -256,9 +244,7 @@ function getPost(x) {
             console.log(xhr);
         }
     });
-
 }
-
 function postIt(g){
     for (var y = 0; y < g.length; y++){
         var post = "<div class='thread' id=''><div class='topwrap'><div class='userinfo pull-left'>";
@@ -268,7 +254,6 @@ function postIt(g){
         post += endpost;
         document.getElementById("replyComment").innerHTML += post;
     }}
-
 //retrieve thread info 
 function addThread(){
     var addthread = document.getElementById("newthread").value;
@@ -278,22 +263,18 @@ function addThread(){
 function createThread(a, b){
     let params = new URLSearchParams(location.search);
     var topicID = params.get('topicID');
-
     var today = new Date();
     var dd = today.getDate();
-
     var mm = today.getMonth()+1; 
     var yyyy = today.getFullYear();
     if(dd<10) 
     {
         dd='0'+dd;
     } 
-
     if(mm<10) 
     {
         mm='0'+mm;
     } 
-
     var URL = "./postThread"
     var thread1 = {"topicID": topicID, "name":b, "text":a, "creatorName": "PLACEHOLDER", "dateCreated" : yyyy+mm+dd}; 
     $.ajax({
@@ -311,19 +292,17 @@ function createThread(a, b){
         }
     });
 }
-
 //creat a threadbox, call it in the thread() function 
 function threadBox(x){
     var start = "<div class='topwrap'><div class='userinfo pull-left'><h3 id='postname'>User Name</h3><p id='date'></p></div><div class='posttext pull-left'><div class='textbox'><textarea value='' rows='3' cols='60' id='newthread' placeholder='type your thread here'></textarea></div></div></div><div class='botwrap'><button onclick='addThread()' class='btn btn-info' type='submit'>Post a Thread</button></div>";
     document.getElementById("answer").innerHTML = start;
 }
-
 function replyBox(x, y){
-    var start = "<div class='topwrap'><div class='userinfo pull-left'><h3 id='postname'>User Name</h3><p id='date'></p></div><div class='posttext pull-left'><div class='textbox'><textarea value='' rows='3' cols='60' id='reply' placeholder='type your reply here'></textarea></div></div></div><div class='botwrap'><button onclick='reply()' class='btn btn-info' type='submit'>Post a Thread</button></div>";
+    var start = "<div class='topwrap'><div class='userinfo pull-left'><h3 id='postname'>User Name</h3><p id='date'></p></div><div class='posttext pull-left'><div class='textbox'><textarea value='' rows='3' cols='60' id='reply' placeholder='type your reply here'></textarea></div></div></div><div class='botwrap'><button onclick='reply("+y+")' class='btn btn-info' type='submit'>Post a Thread</button></div>";
     document.getElementById("answer").innerHTML = start;
     getPost(y);
 }
-
 </script>
 </body>
 </html>
+
